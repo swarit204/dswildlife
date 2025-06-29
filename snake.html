@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snakes - Wildlife World</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+          .styled-button {
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 10px 20px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              cursor: pointer;
+              border-radius: 4px;
+          }
+          .carousel {
+            position: relative;
+            width: 600px;
+            margin: 20px auto;
+            overflow: hidden;
+          }
+          .carousel img {
+            width: 100%;
+            display: none;
+          }
+          .carousel img.active {
+            display: block;
+          }
+          .carousel button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+          }
+          .carousel .prev {
+            left: 0;
+          }
+          .carousel .next {
+            right: 0;
+          }
+      </style>
+</head>
+<body>
+  <header>
+    <h1>Snakes</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="snake.html">Snakes</a></li>
+        <li><a href="birds.html">Birds</a></li>
+        <!--li><a href="habitats.html">Habitats</a></li-->
+        <li><a href="quiz.html">Take a Quiz!</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Snakes</h2>
+    <p>Discover cobras, viper and others in school.</p>
+     <div class="carousel">
+      <button class="prev">&#10094;</button>
+      <img src="./images/cobra.jpeg" alt="Wildlife" class="active">
+      <img src="./images/snake.jpg" alt="Birds" >
+      <button class="next">&#10095;</button>
+    </div>
+
+  </main>
+
+  <footer>
+    <button onclick="window.location.href='quiz.html';" class="styled-button">Take a Quiz!</button>
+  </footer>
+  <script>
+    const images = document.querySelectorAll('.carousel img');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let currentIndex = 0;
+const intervalTime = 4000;
+let carouselInterval = setInterval(() => {
+  currentIndex = (currentIndex + 1) % images.length;
+  updateCarousel();
+}, intervalTime);
+
+    function updateCarousel() {
+      images.forEach((img, i) => {
+        img.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    prevBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateCarousel();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateCarousel();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wildlife Quiz</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .hidden { display: none; }
+
+    .quiz-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    #question-image, .option-img {
+      max-width: 300px;
+      height: auto;
+      margin: 15px;
+      border: 4px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border 0.3s;
+    }
+
+    .option-img:hover {
+      border: 4px solid #1976d2;
+    }
+
+    .option-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .option-item {
+      margin: 10px;
+      text-align: center;
+    }
+
+    .option-label {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .main-label {
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      background: #1976d2;
+      color: white;
+      border-radius: 5px;
+    }
+
+    button:hover { background: #1565c0; }
+
+    ul#summary-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    ul#summary-list li {
+      background: #f9f9f9;
+      border-left: 5px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    ul#summary-list li.correct {
+      border-left-color: green;
+      color: green;
+    }
+
+    ul#summary-list li.incorrect {
+      border-left-color: red;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Take a Quiz!</h1>
+    <nav>
+      <ul style="list-style: none; padding: 0;">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="snake.html">Snakes</a></li>
+        <li><a href="birds.html">Birds</a></li>
+        <li><a href="quiz.html">Take a Quiz!</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="quiz-box">
+      <div id="start-screen">
+        <h2>Wildlife Quiz</h2>
+        <p>Answer all 5 questions about snakes & birds!</p>
+        <p><strong>Prize:</strong> A fun title based on your performance!</p>
+        <input type="text" id="player-name" placeholder="Enter your name" />
+        <br /><br />
+        <button onclick="startQuiz()">Start Quiz</button>
+      </div>
+
+      <div id="quiz-screen" class="hidden">
+        <h2 id="question-title"></h2>
+        <img id="question-image" src="" />
+        <p id="question-label" class="main-label"></p>
+        <div id="options" class="option-container"></div>
+        <p>Score: <span id="score">0</span></p>
+      </div>
+
+      <div id="end-screen" class="hidden">
+        <h2 id="final-message"></h2>
+        <p id="title-line"></p>
+        <h3>Answer Summary:</h3>
+        <ul id="summary-list"></ul>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        img: "images/eagle.jpg",
+        label: "Eagle",
+        question: "Which bird is known for its excellent vision and hunting skills?",
+        options: [
+          { label: "Owl", img: "images/owl.jpg" },
+          { label: "Parrot", img: "images/parrot.jpg" },
+          { label: "Eagle", img: "images/eagle.jpg" },
+          { label: "Duck", img: "images/duck.jpg" }
+        ],
+        answer: "Eagle"
+      },
+      {
+        img: "images/cobra.jpg",
+        label: "Cobra",
+        question: "Which snake is famous for its hood and threat display?",
+        options: [
+          { label: "Viper", img: "images/viper.jpg" },
+          { label: "Python", img: "images/python.jpg" },
+          { label: "Cobra", img: "images/cobra.jpg" },
+          { label: "Boa", img: "images/boa.jpg" }
+        ],
+        answer: "Cobra"
+      },
+      {
+        img: "images/parrot.jpg",
+        label: "Parrot",
+        question: "Which bird is known for mimicking human speech?",
+        options: [
+          { label: "Pigeon", img: "images/pigeon.jpg" },
+          { label: "Sparrow", img: "images/sparrow.jpg" },
+          { label: "Parrot", img: "images/parrot.jpg" },
+          { label: "Peacock", img: "images/peacock.jpg" }
+        ],
+        answer: "Parrot"
+      },
+      {
+        img: "images/python.jpg",
+        label: "Python",
+        question: "Which large snake kills prey by constriction?",
+        options: [
+          { label: "Cobra", img: "images/cobra.jpg" },
+          { label: "Python", img: "images/python.jpg" },
+          { label: "Rattlesnake", img: "images/rattlesnake.jpg" },
+          { label: "Krait", img: "images/krait.jpg" }
+        ],
+        answer: "Python"
+      },
+      {
+        img: "images/owl.jpg",
+        label: "Owl",
+        question: "Which bird is mostly nocturnal and can rotate its head significantly?",
+        options: [
+          { label: "Crow", img: "images/crow.jpg" },
+          { label: "Swan", img: "images/swan.jpg" },
+          { label: "Owl", img: "images/owl.jpg" },
+          { label: "Pelican", img: "images/pelican.jpg" }
+        ],
+        answer: "Owl"
+      }
+    ];
+
+    const titles = [
+      "Feathered Scholar", "Reptile Ranger", "Bird Whisperer", "Serpent Sage", "Avian Ace"
+    ];
+
+    let playerName = "";
+    let score = 0;
+    let current = 0;
+    let answers = [];
+
+    function startQuiz() {
+      const nameInput = document.getElementById("player-name");
+      playerName = nameInput.value.trim();
+      if (!playerName) {
+        alert("Please enter your name!");
+        return;
+      }
+
+      score = 0;
+      current = 0;
+      answers = [];
+      document.getElementById("score").textContent = "0";
+      document.getElementById("start-screen").classList.add("hidden");
+      document.getElementById("quiz-screen").classList.remove("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        endQuiz();
+        return;
+      }
+
+      const q = questions[current];
+      document.getElementById("question-title").textContent = q.question;
+      //document.getElementById("question-image").src = q.img;
+      //document.getElementById("question-label").textContent = q.label;
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(opt => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "option-item";
+
+        const img = document.createElement("img");
+        img.src = opt.img;
+        img.alt = opt.label;
+        img.className = "option-img";
+        img.onclick = () => checkAnswer(opt.label);
+
+        const label = document.createElement("div");
+        label.className = "option-label";
+        label.textContent = opt.label;
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(label);
+        optionsDiv.appendChild(wrapper);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correct = questions[current].answer;
+      if (selected === correct) {
+        score++;
+        answers.push({ question: questions[current].question, correct: true, selected });
+      } else {
+        answers.push({ question: questions[current].question, correct: false, selected });
+      }
+      document.getElementById("score").textContent = score;
+      current++;
+      showQuestion();
+    }
+
+    function endQuiz() {
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.remove("hidden");
+
+      const title = titles[Math.floor(Math.random() * titles.length)];
+      document.getElementById("final-message").textContent =
+        `Congrats, ${playerName}! Your final score is ${score}/5.`;
+      document.getElementById("title-line").textContent =
+        `You are crowned as: ${title}`;
+
+      const summaryList = document.getElementById("summary-list");
+      summaryList.innerHTML = "";
+      answers.forEach((ans, idx) => {
+        const li = document.createElement("li");
+        li.textContent = `Q${idx + 1}: ${ans.question} – Your Answer: ${ans.selected}`;
+        li.className = ans.correct ? "correct" : "incorrect";
+        summaryList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
